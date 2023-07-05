@@ -1,1 +1,1 @@
-# PyAuto-myPytest-VM1
+# pytest-VM1
