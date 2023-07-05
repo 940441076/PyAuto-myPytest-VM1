@@ -1,0 +1,2 @@
+INFO     test_shouye:test_shouye.py:175 导出USB:dicom
+INFO     test_shouye:test_shouye.py:291 导出USB:dicom完成！

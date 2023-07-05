@@ -1,0 +1,2 @@
+INFO     test_shouye:test_shouye.py:714 注册患者
+INFO     test_shouye:test_shouye.py:754 注册患者完成！
