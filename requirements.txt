@@ -12,3 +12,4 @@ pywinauto
 pillow
 pyautogui
 psutil
+123123
