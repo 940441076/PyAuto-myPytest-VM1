@@ -1,2 +1,0 @@
-INFO     test_shouye:test_shouye.py:502 导出local:dicom
-INFO     test_shouye:test_shouye.py:619 导出local:dicom完成！

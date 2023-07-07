@@ -1,2 +1,0 @@
-INFO     test_shouye:test_shouye.py:889 关于软件使用协议
-INFO     test_shouye:test_shouye.py:927 关于软件使用协议完成！

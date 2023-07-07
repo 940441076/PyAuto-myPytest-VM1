@@ -1,2 +1,0 @@
-INFO     test_shouye:test_shouye.py:632 导出local:avi/jpg
-INFO     test_shouye:test_shouye.py:699 导出local:avi/jpg

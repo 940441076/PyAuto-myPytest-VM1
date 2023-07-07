@@ -1,2 +1,0 @@
-INFO     test_shouye:test_shouye.py:55 导出USB:rawdata
-INFO     test_shouye:test_shouye.py:85 导出USB:rawdata完成！

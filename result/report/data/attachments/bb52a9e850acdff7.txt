@@ -1,2 +1,0 @@
-INFO     test_shouye:test_shouye.py:304 导出USB:avi/jpg
-INFO     test_shouye:test_shouye.py:368 导出USB:avi/jpg完成！

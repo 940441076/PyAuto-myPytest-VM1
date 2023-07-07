@@ -1,2 +1,0 @@
-INFO     test_shouye:test_shouye.py:19 导入数据
-INFO     test_shouye:test_shouye.py:42 导入完成！

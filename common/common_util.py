@@ -18,7 +18,10 @@ import win32api
 import json
 import re
 from uiautomation import WindowControl
+from dingtalkchatbot.chatbot import DingtalkChatbot
 def connect_application():
+
+    #。。。。。。。。。。
     '''启动软件'''
     try:
         process = []
@@ -32,7 +35,7 @@ def connect_application():
             app = application.Application(backend='uia').connect(process=pid)
             time.sleep(2)
         else:
-            app = application.Application(backend='uia').start(r'D:\OCTViewer\bin\OCTViewer.exe')
+            app = application.Application(backend='uia').start(r'D:\OCTViewer-VM1\bin\OCTViewer.exe')
             # app['提示'].wait('exists', timeout=50)
             # ok_btn = app['提示'].child_window(title="确 定", auto_id="OkButton", control_type="Button")
             # if ok_btn.exists():
@@ -162,11 +165,11 @@ def import_testdata(index=0):
         if index != 0:
             item.select(1)
         time.sleep(2)
-        import_btn2 = app['血管内断层成像系统'].child_window(title="导入", control_type="Button").wait(wait_for='visible',timeout=50)
+        import_btn2 = app['血管内断层成像系统'].child_window(title="导入", control_type="Button")
         import_btn2.click()
         time.sleep(1)
         ok_btn = app['提示'].child_window(title="确 定", auto_id="OkButton", control_type="Button").wait(
-            wait_for='exists', timeout=500)
+            wait_for='exists', timeout=800)
         ok_btn.click()
         time.sleep(2)
     except:
@@ -360,9 +363,6 @@ def open_engineerMode():
             ok_btn = app['血管内断层成像系统'].child_window(title="确定", auto_id="btnOk", control_type="Button",found_index=0)
             rect = ok_btn.rectangle().mid_point()
             mouse.click(coords=(rect.x, rect.y))
-        ok_btn = app['血管内断层成像系统'].child_window(title="确认", control_type="Text")
-        rect = ok_btn.rectangle().mid_point()
-        mouse.click(coords=(rect.x, rect.y))
         time.sleep(1)
     except:
         time.sleep(1)
@@ -419,7 +419,7 @@ def set_report_name():
     @param new_name:  需要更改的标题文案 【 原文案为：ALLURE REPORT 】
     @return:
     """
-    systemInfo = read_yaml('/extract.yaml')['systemInfo']['']
+    deviceType = read_yaml('/extract.yaml')['systemInfo']['deviceType']
 
 
     title_filepath = r"result/report/widgets/summary.json"
@@ -428,7 +428,7 @@ def set_report_name():
         # 加载json文件中的内容给params
         params = json.load(f)
         # 修改内容
-        params['reportName'] = 'VM1自动化测试报告'
+        params['reportName'] = '{}自动化测试报告'.format(deviceType)
         # 将修改后的内容保存在dict中
         new_params = params
     # 往summary.json中，覆盖写入新的json数据
@@ -441,10 +441,11 @@ def set_report_env_on_html():
      在allure-html报告中往widgets/environment.json中写入环境信息,
         格式参考如下：[{"values":["Auto Test Report"],"name":"report_title"},{"values":["autotestreport_"]]
     """
+    systemInfo = read_yaml('/extract.yaml')['systemInfo']
     env_info = {'系统': 'WIN10 / V07',
                 '内存': '12G',
                 '显卡': 'GTX1080 / 8G',
-                '软件版本': 'VM1-SWV1.2.2.2 / VM1-QMV1.2.2.2 / VM1-QEV1.2.1.6',
+                '软件版本': '{} / {} / {}'.format(systemInfo['SWV'],systemInfo['MC'],systemInfo['MDL']),
                 }
     envs = []
     for k, v in env_info.items():
@@ -459,7 +460,7 @@ def set_report_env_on_html():
 def send_mail():
     '''发送邮件'''
     try:
-
+        dviceType = read_yaml('/extract.yaml')['systemInfo']['deviceType']
         # 登录 （QQ邮箱）
         # sender = '940441076@qq.com'
         # smtp_obj = smtplib.SMTP_SSL('smtp.qq.com', 465)
@@ -474,7 +475,7 @@ def send_mail():
         receiver = ['keyong.xu@forssmann.cn', 'desheng.yuan@forssmann.cn', 'xiachi.liu@forssmann.cn', 'yanwen.wang@forssmann.cn']
         str_receiver = str(receiver).replace("[", '').replace("]", '').replace("'", '')
         # 设置内容
-        title = '测试邮件发送：VM1自动化测试结果'
+        title = '{}自动化测试结果'.format(dviceType)
         msg = MIMEMultipart()
         msg['From'] = formataddr(('徐克永', sender))
         msg['To'] = formataddr(('', str_receiver))
@@ -503,6 +504,23 @@ def send_mail():
         print(e)
 
 
+def send_dingtalk():
+    '''发送钉钉消息'''
+    systemInfo = read_yaml('/extract.yaml')['systemInfo']
+    try:
+        webhook = 'https://oapi.dingtalk.com/robot/send?access_token=034ef99dce9cc9bcb08ce8ed887c8c06ce17a03989cee023098338a06957f419'
+        secret = 'SECfc4c756e21efaf7ffdbef4fb2d732195f177d8d90847956274ea6c887287502c'
+        ding = DingtalkChatbot(webhook, secret)
+        try:
+            window = WindowControl(searchDepth=1, Name='C:\Windows\py.exe')
+            textContent = window.DocumentControl(searchDepth=1).GetTextPattern().DocumentRange.GetText()
+            content = re.compile('at <(.*?)/>.', re.S)
+            http_address = re.findall(content, textContent)[0]
+        except:
+            http_address = '地址错误'
+        ding.send_text('{}自动化测试完成，\n测试报告临时链接(内网)：\n{}'.format(systemInfo['deviceType'],http_address))
+    except Exception as e:
+        print(e)
 def open_report():
     '''本地文件打开'''
     os.system('allure_open_report.bat')
