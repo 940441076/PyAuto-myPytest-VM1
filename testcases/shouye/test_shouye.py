@@ -10,7 +10,7 @@ from common import common_util
 import logging
 log = logging.getLogger(__name__)
 # @pytest.mark.skip('忽略')
-@pytest.mark.run(order=1)
+@pytest.mark.run(order=5)
 @allure.feature('首页界面')
 class Test_ShowYePage:
     # @pytest.mark.test

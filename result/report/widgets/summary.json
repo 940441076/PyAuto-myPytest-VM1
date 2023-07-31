@@ -1,1 +1,20 @@
-{"reportName":"Allure Report","testRuns":[],"statistic":{"failed":0,"broken":0,"skipped":0,"passed":1,"unknown":0,"total":1},"time":{"start":1688634971143,"stop":1688634994564,"duration":23421,"minDuration":23421,"maxDuration":23421,"sumDuration":23421}}
+{
+    "reportName": "VM1自动化测试报告",
+    "testRuns": [],
+    "statistic": {
+        "failed": 1,
+        "broken": 0,
+        "skipped": 0,
+        "passed": 0,
+        "unknown": 0,
+        "total": 1
+    },
+    "time": {
+        "start": 1689158561967,
+        "stop": 1689158590328,
+        "duration": 28361,
+        "minDuration": 28361,
+        "maxDuration": 28361,
+        "sumDuration": 28361
+    }
+}

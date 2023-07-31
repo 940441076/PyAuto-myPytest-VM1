@@ -1,8 +1,8 @@
 systemInfo:
   deviceType: 'VM1'
   SWV: 'VM1-SWV1.1.1.3'
-  MC: 'F2-QMV1.2.2.2'
-  MDL: 'F2-QEV1.2.1.6'
+  MC: 'VM1-QMV1.1.1.2'
+  MDL: 'VM1-QEV1.1.1.1'
   DSA: False
   K12: True
   length_speed: {'24mm': [ '10mm/s', '20mm/s' ],

@@ -9,11 +9,11 @@ from pywinauto import mouse, application
 import time
 import pywinauto
 from common import common_util
-@pytest.mark.run(order=5)
+@pytest.mark.run(order=1)
 @allure.feature('扫描图像界面')
 class Test_ScanImagePage:
     def setup_class(self):
-        common_util.back_systemSettingPage()
+        _ = common_util.connect_application()
         common_util.del_all_patients()
         time.sleep(1)
         common_util.new_patient('testID','testName',1)
@@ -139,7 +139,7 @@ class Test_ScanImagePage:
             assert False
 
 
-    @pytest.mark.skip('忽略')
+    # @pytest.mark.skip('忽略')
     # @pytest.mark.test
     @allure.title('回撤-6k')
     def test_pullback_6k(self):
@@ -240,7 +240,7 @@ class Test_ScanImagePage:
             common_util.add_text(str(e))
             assert False
 
-    @pytest.mark.skip('忽略')
+    # @pytest.mark.skip('忽略')
     # @pytest.mark.test
     @allure.title('回撤-12k')
     def test_pullback_12k(self):
@@ -248,7 +248,7 @@ class Test_ScanImagePage:
         try:
             app = common_util.connect_application()
             common_util.back_scanImagePage()
-            with allure.step('12k:不同转速和距离'):
+            with allure.step('12k:不同转速和距离:105mm不支持12k'):
                 k12 = common_util.read_systemInfo()
                 if k12['K12'] == True:
                     setting_btn = app['血管内断层成像系统'].child_window(auto_id="btnSetting", control_type="Button")
@@ -263,68 +263,79 @@ class Test_ScanImagePage:
                     k12_btn.click()
                     content_len = pull_len.texts()
                     for i in range(len(content_len)):
-                        setting_close_btn = app['血管内断层成像系统'].child_window(auto_id="closeSetting",control_type="Button")
-                        if setting_close_btn.exists() == False:
-                            setting_btn = app['血管内断层成像系统'].child_window(auto_id="btnSetting", control_type="Button")
-                            setting_btn.click_input()
                         pull_len.select(i)
-                        pull_speed = app['血管内断层成像系统'].child_window(auto_id="comPullBackSped",
-                                                                            control_type="ComboBox")
-                        pull_speed.select(0)
-                        content_speed = pull_speed.texts()
-                        for j in range(len(content_speed)):
+                        if content_len[i] == '105mm':
+                            time.sleep(1)
+                            with allure.step('105mm不支持12k'):
+                                time.sleep(1)
+                                common_util.screen_shot('105mm不支持12k')
+                                app['血管内断层成像系统'].child_window(title="12k转",auto_id="rbRotateSpeed12000",
+                                                                                 control_type="RadioButton", found_index=0).wait_not('enabled',timeout=3)
+                                assert True
+                                break
+                        else:
                             setting_close_btn = app['血管内断层成像系统'].child_window(auto_id="closeSetting",control_type="Button")
                             if setting_close_btn.exists() == False:
-                                setting_btn = app['血管内断层成像系统'].child_window(auto_id="btnSetting",control_type="Button")
+                                setting_btn = app['血管内断层成像系统'].child_window(auto_id="btnSetting", control_type="Button")
                                 setting_btn.click_input()
-                            pull_speed.select(j)
-                            time.sleep(1)
-                            common_util.screen_shot('距离/速度:{}-{}'.format(content_len[i],content_speed[j]))
-                            setting_close_btn = app['血管内断层成像系统'].child_window(auto_id="closeSetting",control_type="Button")
-                            setting_close_btn.click()
-                            dsa_btn = app['血管内断层成像系统'].child_window(title="显示DSA", control_type="Text", found_index=0)
-                            if dsa_btn.exists():
-                                dsa_btn = app['血管内断层成像系统'].child_window(title="显示DSA", auto_id="btnShow",control_type="Button")
-                                dsa_btn.click_input()
-                            scan_btn = app['血管内断层成像系统'].child_window(auto_id="staScan", control_type="Button")
-                            scan_btn.click()
-                            time.sleep(5)
-                            ok_btn = app['提示'].child_window(title="确 定", auto_id="OkButton", control_type="Button")
-                            if ok_btn.exists():
-                                ok_btn.click()
-                            else:
-                                stop_btn = app['血管内断层成像系统'].child_window(auto_id="stopScan", control_type="Button")
-                                stop_btn.click()
-                            scan_btn = app['血管内断层成像系统'].child_window(auto_id="staScan", control_type="Button")
-                            scan_btn.click()
-                            time.sleep(5)
-                            ready_btn = app['血管内断层成像系统'].child_window(auto_id="staScan", control_type="Button")
-                            ready_btn.click()
-                            time.sleep(5)
-                            pullback_btn = app['血管内断层成像系统'].child_window(auto_id="staScan", control_type="Button")
-                            pullback_btn.click()
-                            reset_btn = app['血管内断层成像系统'].child_window(title="校准", auto_id="btnResetShrink",control_type="Button").wait('enabled', timeout=180)
-                            assert reset_btn.is_enabled()
-                            mm_pos = app['血管内断层成像系统'].child_window(title="mm", control_type="Text", found_index=0)
-                            rect = mm_pos.rectangle().mid_point()
-                            mouse.click(coords=(rect.x, rect.y))
-                            play_btn = app['血管内断层成像系统'].child_window(auto_id="playBtn", control_type="Button")
-                            rect = play_btn.rectangle().mid_point()
-                            mouse.click(coords=(rect.x, rect.y))
-                            clip_btn = app['血管内断层成像系统'].child_window(auto_id="btnClipImage", control_type="Button").wait(wait_for='enabled', timeout=12)
-                            if clip_btn.is_enabled():
-                                clip_btn = app['血管内断层成像系统'].child_window(auto_id="txtIndex", control_type="Text")
-                                frame_truth = int(clip_btn.texts()[0].split(': ')[-1])
-                                pullLen = content_len[i].split('mm')[0]
-                                pullSpeed = content_speed[j].split('mm')[0]
-                                frame_expect = int(int(pullLen) / int(pullSpeed) * 200)
-                                error = int(frame_expect * 0.05)
-                                assert abs(frame_expect - frame_truth)< error
-                                common_util.add_text('期望帧数：{}-实际帧数：{}'.format(frame_expect, frame_truth))
+                            pull_len.select(i)
+                            pull_speed = app['血管内断层成像系统'].child_window(auto_id="comPullBackSped",
+                                                                                control_type="ComboBox")
+                            pull_speed.select(0)
+                            content_speed = pull_speed.texts()
+                            for j in range(len(content_speed)):
+                                setting_close_btn = app['血管内断层成像系统'].child_window(auto_id="closeSetting",control_type="Button")
+                                if setting_close_btn.exists() == False:
+                                    setting_btn = app['血管内断层成像系统'].child_window(auto_id="btnSetting",control_type="Button")
+                                    setting_btn.click_input()
+                                pull_speed.select(j)
                                 time.sleep(1)
-                            add_btn = app['血管内断层成像系统'].child_window(auto_id="addOCT", control_type="Button")
-                            add_btn.click()
-                            time.sleep(2)
+                                common_util.screen_shot('距离/速度:{}-{}'.format(content_len[i],content_speed[j]))
+                                setting_close_btn = app['血管内断层成像系统'].child_window(auto_id="closeSetting",control_type="Button")
+                                setting_close_btn.click()
+                                dsa_btn = app['血管内断层成像系统'].child_window(title="显示DSA", control_type="Text", found_index=0)
+                                if dsa_btn.exists():
+                                    dsa_btn = app['血管内断层成像系统'].child_window(title="显示DSA", auto_id="btnShow",control_type="Button")
+                                    dsa_btn.click_input()
+                                scan_btn = app['血管内断层成像系统'].child_window(auto_id="staScan", control_type="Button")
+                                scan_btn.click()
+                                time.sleep(5)
+                                ok_btn = app['提示'].child_window(title="确 定", auto_id="OkButton", control_type="Button")
+                                if ok_btn.exists():
+                                    ok_btn.click()
+                                else:
+                                    stop_btn = app['血管内断层成像系统'].child_window(auto_id="stopScan", control_type="Button")
+                                    stop_btn.click()
+                                scan_btn = app['血管内断层成像系统'].child_window(auto_id="staScan", control_type="Button")
+                                scan_btn.click()
+                                time.sleep(4)
+                                ready_btn = app['血管内断层成像系统'].child_window(auto_id="staScan", control_type="Button")
+                                ready_btn.click()
+                                time.sleep(5)
+                                pullback_btn = app['血管内断层成像系统'].child_window(auto_id="staScan", control_type="Button")
+                                pullback_btn.click()
+                                reset_btn = app['血管内断层成像系统'].child_window(title="校准", auto_id="btnResetShrink",control_type="Button").wait('enabled', timeout=180)
+                                assert reset_btn.is_enabled()
+                                mm_pos = app['血管内断层成像系统'].child_window(title="mm", control_type="Text", found_index=0)
+                                rect = mm_pos.rectangle().mid_point()
+                                mouse.click(coords=(rect.x, rect.y))
+                                play_btn = app['血管内断层成像系统'].child_window(auto_id="playBtn", control_type="Button")
+                                rect = play_btn.rectangle().mid_point()
+                                mouse.click(coords=(rect.x, rect.y))
+                                clip_btn = app['血管内断层成像系统'].child_window(auto_id="btnClipImage", control_type="Button").wait(wait_for='enabled', timeout=12)
+                                if clip_btn.is_enabled():
+                                    clip_btn = app['血管内断层成像系统'].child_window(auto_id="txtIndex", control_type="Text")
+                                    frame_truth = int(clip_btn.texts()[0].split(': ')[-1])
+                                    pullLen = content_len[i].split('mm')[0]
+                                    pullSpeed = content_speed[j].split('mm')[0]
+                                    frame_expect = int(int(pullLen) / int(pullSpeed) * 200)
+                                    error = int(frame_expect * 0.05)
+                                    assert abs(frame_expect - frame_truth)< error
+                                    common_util.add_text('期望帧数：{}-实际帧数：{}'.format(frame_expect, frame_truth))
+                                    time.sleep(1)
+                                add_btn = app['血管内断层成像系统'].child_window(auto_id="addOCT", control_type="Button")
+                                add_btn.click()
+                                time.sleep(2)
         except Exception as e:
             time.sleep(1)
             common_util.screen_shot('异常截图')

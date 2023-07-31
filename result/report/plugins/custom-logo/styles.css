@@ -2,13 +2,16 @@
 /*  background: url('custom-logo.svg') no-repeat left center !important;*/
 /*  margin-left: 10px;*/
 /*}*/
+
+
+
 .side-nav__brand {
 background: url('logo.jpg') no-repeat center !important;
 margin-right: 40px;
 height: 80px;
 background-size: contain !important;
 }
-
-.side-nav__brand-text{
-display: none;
+.side-nav__brand span{
+	display: none;
 }
+

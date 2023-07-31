@@ -1,2 +1,8 @@
-# Created by pytest automatically.
-.pytest_cache/v
+# 忽略提交的文件
+.idea/
+.pytest_cache/
+!@AutomationLog.txt
+logs/
+result/temp/
+result/result.jpg
+result/screen.jpg

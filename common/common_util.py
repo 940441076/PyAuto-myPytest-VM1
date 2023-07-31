@@ -35,7 +35,7 @@ def connect_application():
             app = application.Application(backend='uia').connect(process=pid)
             time.sleep(2)
         else:
-            app = application.Application(backend='uia').start(r'D:\OCTViewer-VM1\bin\OCTViewer.exe')
+            app = application.Application(backend='uia').start(r'D:\VM1_7.8\bin\OCTViewer.exe')
             # app['提示'].wait('exists', timeout=50)
             # ok_btn = app['提示'].child_window(title="确 定", auto_id="OkButton", control_type="Button")
             # if ok_btn.exists():
@@ -517,7 +517,7 @@ def send_dingtalk():
             content = re.compile('at <(.*?)/>.', re.S)
             http_address = re.findall(content, textContent)[0]
         except:
-            http_address = '地址错误'
+            http_address = '链接：无'
         ding.send_text('{}自动化测试完成，\n测试报告临时链接(内网)：\n{}'.format(systemInfo['deviceType'],http_address))
     except Exception as e:
         print(e)
