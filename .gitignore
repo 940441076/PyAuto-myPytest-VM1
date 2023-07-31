@@ -3,6 +3,5 @@
 .pytest_cache/
 @AutomationLog.txt
 logs/
-result/result.jpg
 result/screen.jpg
-result/temp/
+
