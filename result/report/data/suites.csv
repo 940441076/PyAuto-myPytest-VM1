@@ -1,2 +1,2 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"failed","Wed Jul 12 18:42:41 CST 2023","Wed Jul 12 18:43:10 CST 2023","28361","testcases.export","test_export","TestExport","","","test_export","测试导出"
+"passed","Fri Aug 04 17:18:28 CST 2023","Fri Aug 04 17:19:05 CST 2023","37232","testcases.imageView","test_imageView","Test_ImageViewPage","","","设置","设置：回撤类型，图像窗宽窗位风格，图像显示范围，"

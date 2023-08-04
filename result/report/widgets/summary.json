@@ -2,19 +2,19 @@
     "reportName": "VM1自动化测试报告",
     "testRuns": [],
     "statistic": {
-        "failed": 1,
+        "failed": 0,
         "broken": 0,
         "skipped": 0,
-        "passed": 0,
+        "passed": 1,
         "unknown": 0,
         "total": 1
     },
     "time": {
-        "start": 1689158561967,
-        "stop": 1689158590328,
-        "duration": 28361,
-        "minDuration": 28361,
-        "maxDuration": 28361,
-        "sumDuration": 28361
+        "start": 1691140708188,
+        "stop": 1691140745420,
+        "duration": 37232,
+        "minDuration": 37232,
+        "maxDuration": 37232,
+        "sumDuration": 37232
     }
 }

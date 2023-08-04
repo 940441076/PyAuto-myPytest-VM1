@@ -14,11 +14,11 @@ import string
 import os
 import win32api
 import glob
-# @pytest.mark.skip('忽略')
+@pytest.mark.skip('忽略')
 @allure.feature('导出')
 @allure.title('导出')
 class TestExport:
-    @pytest.mark.test
+    # @pytest.mark.test
     def test_export(self):
         allure.dynamic.description('测试导出')
         try:

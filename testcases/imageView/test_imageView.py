@@ -16,9 +16,9 @@ from common import common_util
 @allure.feature('图像查看界面')
 class Test_ImageViewPage:
 
-    def setup_class(self):
-        common_util.del_all_patients()
-        common_util.import_testdata()
+    # def setup_class(self):
+    #     common_util.del_all_patients()
+    #     common_util.import_testdata()
 
     # @pytest.mark.test
     @allure.title('打印到U盘')
@@ -306,22 +306,27 @@ class Test_ImageViewPage:
             assert False
 
     # @pytest.mark.test
+    @pytest.mark.parametrize('listType', common_util.read_yaml('/extract.yaml')['settingPage'])
     @allure.title('设置血管类型和手术过程')
-    def test_vessel_procedure(self):
+    def test_vessel_procedure(self,listType):
         allure.dynamic.description('血管类型和手术过程')
         try:
             app = common_util.connect_application()
             common_util.back_imageViewPage()
             with allure.step('对比软件中的项与实际需求项vessel'):
-                vessel_type = app['血管内断层成像系统'].child_window(auto_id="cmbVessel", control_type="ComboBox")
-                vessel_list = ['Not Selected', 'RCA Prox', 'RCA Mid', 'RCA Distal', 'PDA', 'Left Main', 'LAD Prox', 'LAD Mid', 'LAD Distal', 'Diagonal 1', 'Diagonal 2', 'LCX Prox', 'LCX OM1',
-                                      'LCX Mid', 'LCX OM2', 'LCX Distal', 'Other']
-                assert vessel_type.texts()== vessel_list
+                vessel_combox = app['血管内断层成像系统'].child_window(auto_id="cmbVessel", control_type="ComboBox")
+                vessel_type = vessel_combox.texts()
+                vessel_list = ['Not Selected']
+                temp = listType['list_Vessel']
+                for i in range(len(temp)):
+                    vessel_list.append(temp[i][0])
+                vessel_list.append('Other')
+                assert vessel_type == vessel_list
             with allure.step('新增项：add_vessel'):
-                rect = vessel_type.rectangle().mid_point()
+                rect = vessel_combox.rectangle().mid_point()
                 mouse.click(coords=(rect.x, rect.y))
                 time.sleep(1)
-                select_one = app['血管内断层成像系统'].child_window(title="Left Main", control_type="ListItem", found_index=0)
+                select_one = app['血管内断层成像系统'].child_window(title="Left VA", control_type="ListItem", found_index=0)
                 rect = select_one.rectangle().mid_point()
                 mouse.click(coords=(rect.x, rect.y))
                 time.sleep(1)
@@ -344,20 +349,25 @@ class Test_ImageViewPage:
                 common_util.screen_shot('新增add_vessel类型')
                 assert 'add_vessel'in vessel_type.texts()
             with allure.step('对比软件中的项与实际需求项procedure'):
-                procedure_type = app['血管内断层成像系统'].child_window(auto_id="cmbProcedure", control_type="ComboBox")
-                procedure_list = ['Not Selected', 'Pre-PCI', 'Post-PCI', 'Follow-Up', 'Other']
-                assert procedure_type.texts()== procedure_list
+                procedure_combox = app['血管内断层成像系统'].child_window(auto_id="cmbProcedure", control_type="ComboBox")
+                procedure_type = procedure_combox.texts()
+                procedure_list = ['Not Selected']
+                temp = listType['list_Procedure']
+                for i in range(len(temp)):
+                    procedure_list.append(temp[i][0])
+                procedure_list.append('Other')
+                assert procedure_type == procedure_list
             with allure.step('新增项：add_procedure'):
-                rect = procedure_type.rectangle().mid_point()
+                rect = procedure_combox.rectangle().mid_point()
                 mouse.click(coords=(rect.x, rect.y))
                 time.sleep(0.5)
                 mouse.click(coords=(rect.x, rect.y))
-                select_one = app['血管内断层成像系统'].child_window(title="Pre-PCI", control_type="ListItem", found_index=0)
+                select_one = app['血管内断层成像系统'].child_window(title="Pre-Stenting", control_type="ListItem", found_index=0)
                 rect = select_one.rectangle().mid_point()
                 mouse.click(coords=(rect.x, rect.y))
                 time.sleep(1)
-                procedure_type = app['血管内断层成像系统'].child_window(auto_id="cmbProcedure", control_type="ComboBox")
-                rect = procedure_type.rectangle().mid_point()
+                procedure_combox = app['血管内断层成像系统'].child_window(auto_id="cmbProcedure", control_type="ComboBox")
+                rect = procedure_combox.rectangle().mid_point()
                 mouse.click(coords=(rect.x, rect.y))
                 time.sleep(1)
                 show_add_pane = app['血管内断层成像系统'].child_window(title="Other", control_type="ListItem", found_index=0)
@@ -370,11 +380,11 @@ class Test_ImageViewPage:
                 ok_btn = app['血管内断层成像系统'].child_window(title="确定", auto_id="btnOK", control_type="Button", found_index=0)
                 ok_btn.click()
                 time.sleep(1)
-                rect = procedure_type.rectangle().mid_point()
+                rect = procedure_combox.rectangle().mid_point()
                 mouse.click(coords=(rect.x, rect.y))
                 time.sleep(1)
                 common_util.screen_shot('新增procedure类型')
-                assert 'add_procedure'in procedure_type.texts()
+                assert 'add_procedure'in procedure_combox.texts()
                 time.sleep(1)
             with allure.step('返回系统设置界面，对比vessel和procedure'):
                 common_util.back_systemSettingPage()
@@ -986,40 +996,69 @@ class Test_ImageViewPage:
             common_util.add_text(str(e))
             assert False
 
-    @pytest.mark.skip('忽略')
     # @pytest.mark.test
-    @allure.title('无DSA功能，不显示DSA复选框')
-    def test_DSA(self):
-        dsa = common_util.read_systemInfo()
-        if dsa['DSA'] ==False:
-            allure.dynamic.description('无DSA功能:不显示DSA复选框')
-            try:
-                app = common_util.connect_application()
-                common_util.back_imageViewPage()
-                with allure.step('没有显示DSA复选框'):
-                    app['血管内断层成像系统'].child_window(title="校准", auto_id="btnResetShrink",control_type="Button").wait('enabled', timeout=120)
+    @allure.title('设置')
+    def test_systemSet(self):
+        allure.dynamic.description('设置：回撤类型，图像窗宽窗位风格，图像显示范围，')
+        try:
+            app = common_util.connect_application()
+            common_util.back_scanImagePage()
+            with allure.step('回撤距离和速度'):
+                setting_btn = app['血管内断层成像系统'].child_window(auto_id="btnSetting", control_type="Button",found_index=0)
+                setting_btn.click_input()
+                pull_len = app['血管内断层成像系统'].child_window(auto_id="comPullback", control_type="ComboBox")
+                pull_len.select(0)
+                content_len = pull_len.texts()
+                length_speed = {}
+                for i in range(len(content_len)):
+                    pull_len.select(i)
+                    time.sleep(0.5)
+                    pull_speed = app['血管内断层成像系统'].child_window(auto_id="comPullBackSped",
+                                                                        control_type="ComboBox")
+                    time.sleep(0.5)
+                    pull_speed.select(0)
+                    length_speed['{}'.format(content_len[i])] = pull_speed.texts()
+                except_length_speed = common_util.read_systemInfo()
+                assert except_length_speed['length_speed'] == length_speed
+            with allure.step('回撤类型'):
+                pull_type = app['血管内断层成像系统'].child_window(auto_id="comTriggers", control_type="ComboBox",
+                                                                   found_index=0)
+                content_type = pull_type.texts()
+                assert content_type == ['自动', '手动']
+                for i in range(len(content_type)):
+                    pull_type.select(i)
                     time.sleep(1)
-                    checkbox_3D = app['血管内断层成像系统'].child_window(title="3D", auto_id="ckb3d",control_type="CheckBox")
-                    rect = checkbox_3D.rectangle()
-                    rect = re.sub('[a-zA-Z() ]', '', str(rect)).split(',')
-                    pos = (int(rect[2]) - 3, int(rect[1]))
-                    mouse.move(coords=pos)
+            with allure.step('图像窗宽窗位风格'):
+                window_type = app['血管内断层成像系统'].child_window(auto_id="comWindowType",
+                                                                     control_type="ComboBox", found_index=0)
+                content_type = window_type.texts()
+                assert content_type == ['常规', '暗黑', '高亮', '锐利', '自定义']
+                for i in range(len(content_type)):
+                    window_type.select(i)
                     time.sleep(1)
-                    common_util.screen_shot('没有DSA复选框')
-                    app['血管内断层成像系统'].child_window(title="DSA", auto_id="ckbdsa",control_type="CheckBox").wait_not('exists',timeout=10)
-                    assert True
-            except Exception as e:
+                window_type.select(0)
+            with allure.step('显示范围'):
+                field_type = app['血管内断层成像系统'].child_window(auto_id="comField", control_type="ComboBox",
+                                                                    found_index=0)
+                content_type = field_type.texts()
+                except_type = common_util.read_systemInfo()['field_type']
+                assert content_type == except_type
+                for i in range(len(content_type)):
+                    field_type.select(i)
+                    time.sleep(1)
+                field_type.select(1)
+                close_btn = app['血管内断层成像系统'].child_window(auto_id="closeSetting", control_type="Button")
+                close_btn.click()
                 time.sleep(1)
-                common_util.screen_shot('异常截图')
-                time.sleep(1)
-                common_util.kill_app()
-                time.sleep(2)
-                common_util.connect_application()
-                common_util.add_text(str(e))
-                assert False
-
-
-
+        except Exception as e:
+            time.sleep(1)
+            common_util.screen_shot('异常截图')
+            time.sleep(1)
+            common_util.kill_app()
+            time.sleep(2)
+            common_util.connect_application()
+            common_util.add_text(str(e))
+            assert False
     # @pytest.mark.test
     @allure.title('结束查看')
     def test_endView(self):

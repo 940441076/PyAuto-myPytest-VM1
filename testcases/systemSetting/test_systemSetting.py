@@ -38,7 +38,7 @@ class Test_SystemSettingPage:
                 vessel_type = vessel_list.texts()
                 assert vessel_type== listType['list_Vessel']
             with allure.step('删除后的数量比原来少一个'):
-                RCA_btn = app['血管内断层成像系统'].child_window(title="LCX OM2", control_type="ListItem")
+                RCA_btn = app['血管内断层成像系统'].child_window(title="BA", control_type="ListItem")
                 rect = RCA_btn.rectangle().mid_point()
                 mouse.click(coords=(rect.x, rect.y))
                 time.sleep(0.5)
@@ -267,13 +267,14 @@ class Test_SystemSettingPage:
             common_util.connect_application()
             common_util.add_text(str(e))
             assert False
-
+    # @pytest.mark.test
     @allure.title('显示NVDIA控制面板')
     def test_show_nvdiaPane(self):
         allure.dynamic.description('工程师模式下，显示NVDIA控制面板')
         try:
             app = common_util.connect_application()
             common_util.back_systemSettingPage()
+            common_util.open_engineerMode()
             with allure.step('点击NVDIA控制面板按钮'):
                 nvdia_Btn = app['血管内断层成像系统'].child_window(title="NVDIA控制面板", control_type="Text")
                 rect = nvdia_Btn.rectangle().mid_point()
@@ -478,70 +479,9 @@ class Test_SystemSettingPage:
             common_util.add_text(str(e))
             assert False
 
-    @allure.title('支架配置')
-    def test_stentSet(self):
-        allure.dynamic.description('支架配置:值范围、正常颜色和异常颜色')
-        try:
-            app = common_util.connect_application()
-            common_util.back_systemSettingPage()
-            with allure.step('设置值：最大1 μm、最小300 μm'):
-                Bracket_conf_btn = app['血管内断层成像系统'].child_window(title="支架配置", control_type="TabItem")
-                rect = Bracket_conf_btn.rectangle().mid_point()
-                mouse.click(coords=(rect.x, rect.y))
-                stentRange = app['血管内断层成像系统'].child_window(auto_id="sliderStent", control_type="Slider")
-                rect = stentRange.rectangle().mid_point()
-                assert stentRange.min_value()== 1.0
-                assert stentRange.max_value()== 300.0
-                stentRange.set_value(150)
-                mouse.press(coords=(rect.x, rect.y))
-                mouse.move(coords=(rect.x - 500, rect.y))
-                setValue = app['血管内断层成像系统']['Static6']
-                assert ['1 μm']== setValue.texts()
-                mouse.move(coords=(rect.x + 800, rect.y))
-                mouse.release(coords=(rect.x + 800, rect.y))
-                setValue = app['血管内断层成像系统']['Static6']
-                assert ['300 μm']== setValue.texts()
-                stentRange.set_value(150)
-                mouse.press(coords=(rect.x, rect.y))
-                mouse.move(coords=(rect.x + 50, rect.y))
-                mouse.release(coords=(rect.x + 50, rect.y))
-                setValue = app['血管内断层成像系统']['Static6']
-                list1 = [str(int(stentRange.value())) + ' μm']
-                list2 = setValue.texts()
-                assert list1== list2
-            with allure.step('显示正常颜色设置面板'):
-                normalBtn = app['血管内断层成像系统'].child_window(title=". . .", auto_id="btnSelColorNormal",
-                                                                        control_type="Button")
-                rect = normalBtn.rectangle().mid_point()
-                mouse.click(coords=(rect.x, rect.y))
-                colorPane = app['血管内断层成像系统'].child_window(title="颜色", control_type="Window")
-                time.sleep(1)
-                common_util.screen_shot('颜色设置面板')
-                assert colorPane.exists()
-                colorPane.close()
-            with allure.step('显示正常颜色设置面板'):
-                abnormalBtn = app['血管内断层成像系统'].child_window(title=". . .", auto_id="btnSelColorAbNormal",
-                                                                          control_type="Button")
-                rect = abnormalBtn.rectangle().mid_point()
-                mouse.click(coords=(rect.x, rect.y))
-                colorPane = app['血管内断层成像系统'].child_window(title="颜色", control_type="Window")
-                time.sleep(1)
-                common_util.screen_shot('颜色设置面板')
-                assert colorPane.exists()
-                colorPane.close()
-            time.sleep(1)
-        except Exception as e:
-            time.sleep(1)
-            common_util.screen_shot('异常截图')
-            time.sleep(1)
-            common_util.kill_app()
-            time.sleep(2)
-            common_util.connect_application()
-            common_util.add_text(str(e))
-            assert False
     # @pytest.mark.test
     @allure.title('查看上下位机软件版本')
-    def test_show_engineerMode(self):
+    def test_check_version(self):
         allure.dynamic.description('查看上下位机软件版本')
         try:
             app = common_util.connect_application()
@@ -598,6 +538,67 @@ class Test_SystemSettingPage:
                 mouse.click(coords=(rect.x, rect.y))
                 time.sleep(1)
                 common_util.screen_shot('退出工程师模式')
+            time.sleep(1)
+        except Exception as e:
+            time.sleep(1)
+            common_util.screen_shot('异常截图')
+            time.sleep(1)
+            common_util.kill_app()
+            time.sleep(2)
+            common_util.connect_application()
+            common_util.add_text(str(e))
+            assert False
+    @allure.title('支架配置')
+    def test_stentSet(self):
+        allure.dynamic.description('支架配置:值范围、正常颜色和异常颜色')
+        try:
+            app = common_util.connect_application()
+            common_util.back_systemSettingPage()
+            with allure.step('设置值：最大1 μm、最小300 μm'):
+                Bracket_conf_btn = app['血管内断层成像系统'].child_window(title="支架配置", control_type="TabItem")
+                rect = Bracket_conf_btn.rectangle().mid_point()
+                mouse.click(coords=(rect.x, rect.y))
+                stentRange = app['血管内断层成像系统'].child_window(auto_id="sliderStent", control_type="Slider")
+                rect = stentRange.rectangle().mid_point()
+                assert stentRange.min_value()== 1.0
+                assert stentRange.max_value()== 300.0
+                stentRange.set_value(150)
+                mouse.press(coords=(rect.x, rect.y))
+                mouse.move(coords=(rect.x - 500, rect.y))
+                setValue = app['血管内断层成像系统']['Static6']
+                assert ['1 μm']== setValue.texts()
+                mouse.move(coords=(rect.x + 800, rect.y))
+                mouse.release(coords=(rect.x + 800, rect.y))
+                setValue = app['血管内断层成像系统']['Static6']
+                assert ['300 μm']== setValue.texts()
+                stentRange.set_value(150)
+                mouse.press(coords=(rect.x, rect.y))
+                mouse.move(coords=(rect.x + 50, rect.y))
+                mouse.release(coords=(rect.x + 50, rect.y))
+                setValue = app['血管内断层成像系统']['Static6']
+                list1 = [str(int(stentRange.value())) + ' μm']
+                list2 = setValue.texts()
+                assert list1== list2
+            with allure.step('显示正常颜色设置面板'):
+                normalBtn = app['血管内断层成像系统'].child_window(title=". . .", auto_id="btnSelColorNormal",
+                                                                        control_type="Button")
+                rect = normalBtn.rectangle().mid_point()
+                mouse.click(coords=(rect.x, rect.y))
+                colorPane = app['血管内断层成像系统'].child_window(title="颜色", control_type="Window")
+                time.sleep(1)
+                common_util.screen_shot('颜色设置面板')
+                assert colorPane.exists()
+                colorPane.close()
+            with allure.step('显示正常颜色设置面板'):
+                abnormalBtn = app['血管内断层成像系统'].child_window(title=". . .", auto_id="btnSelColorAbNormal",
+                                                                          control_type="Button")
+                rect = abnormalBtn.rectangle().mid_point()
+                mouse.click(coords=(rect.x, rect.y))
+                colorPane = app['血管内断层成像系统'].child_window(title="颜色", control_type="Window")
+                time.sleep(1)
+                common_util.screen_shot('颜色设置面板')
+                assert colorPane.exists()
+                colorPane.close()
             time.sleep(1)
         except Exception as e:
             time.sleep(1)

@@ -35,7 +35,7 @@ def connect_application():
             app = application.Application(backend='uia').connect(process=pid)
             time.sleep(2)
         else:
-            app = application.Application(backend='uia').start(r'D:\VM1_7.8\bin\OCTViewer.exe')
+            app = application.Application(backend='uia').start(r'D:\OCTViewer - 7.12\bin\OCTViewer.exe')
             # app['提示'].wait('exists', timeout=50)
             # ok_btn = app['提示'].child_window(title="确 定", auto_id="OkButton", control_type="Button")
             # if ok_btn.exists():
@@ -319,6 +319,7 @@ def back_systemSettingPage():
             dispose_btn = app['血管内断层成像系统'].child_window(title="系统配置", control_type="Text", found_index=0)
             rect = dispose_btn.rectangle().mid_point()
             mouse.click(coords=(rect.x, rect.y))
+
             time.sleep(1)
     except:
         time.sleep(1)

@@ -1,48 +1,29 @@
 systemInfo:
   deviceType: 'VM1'
-  SWV: 'VM1-SWV1.1.1.3'
-  MC: 'VM1-QMV1.1.1.2'
+  SWV: 'VM1-SWV1.1.1.2'
+  MC: 'VM1-QMV1.1.1.1'
   MDL: 'VM1-QEV1.1.1.1'
   DSA: False
   K12: True
   length_speed: {'24mm': [ '10mm/s', '20mm/s' ],
                   '54mm': [ '10mm/s', '20mm/s', '40mm/s'],
-                  '76mm': [ '20mm/s', '40mm/s' ],
-                  '105mm': [ '20mm/s', '40mm/s' ]}
+                  '76mm': [ '20mm/s', '40mm/s' ]}
   field_type: ['7mm', '10mm', '14mm', '20mm']
   info_text: 4901
   info_key: '血管内光学干涉断层成像系统'
 
 shouyePage:
-  register:
-    - hosptialID: "1001"
-      patientName: "患者1"
-      age: -1
-      sex: '女'
-      auto_id: "rbtnWoman"
+  # 英文大小写、下划线、横杠和阿拉伯数字。长度不超过20个字符
+  - hosptialID: ['Abc','123','_-','Abc123_-Abc123_-Abc123_-','住院号中文','~`!@#$%^&*()=+/（）:;：？?、。，,【】|.\、']
+  # 中文、英文大小写、数字、间隔点、下划线、横线、括号和空格。长度不超过20个字符
+    patientName: ['姓名','Abc','123','·_-() ','姓名Abc123._-() 16789212345','~`!@#$%^&*()=+/（）:;：？?、。，,【】|.\']
+  # 1-120
+    age: ['1','120','-1','0','121','中文Abc._-() ']
+    sex: [['男','rbtnMen'],['女','rbtnWoman']]
 
-    - hosptialID: "1002"
-      patientName: "患者2"
-      age: 0
-      sex: "女"
-      auto_id: "rbtnWoman"
-
-    - hosptialID: "1003"
-      patientName: "患者3"
-      age: 120
-      sex: "男"
-      auto_id: "rbtnMen"
-
-    - hosptialID: '1004_-Aa~你`!@#$%^&*()=+/（）:;：？?、。，,【】|.\'
-      patientName: '患者4_-Aa~`!@#$%^&*()=+/（）:;：？?、。，,【】|.\'
-      age: 121
-      sex: "男"
-      auto_id: "rbtnMen"
 
 
 settingPage:
-  - list_Vessel: [['RCA Prox'], ['RCA Mid'], ['RCA Distal'], ['PDA'], ['Left Main'], ['LAD Prox'],['LAD Mid'],
-              ['LAD Distal'], ['Diagonal 1'], ['Diagonal 2'], ['LCX Prox'], ['LCX OM1'], ['LCX Mid'],
-              ['LCX OM2'], ['LCX Distal']
-              ]
-    list_Procedure: [['Pre-PCI'], ['Post-PCI'], ['Follow-Up']]
+  - list_Vessel: [['Left ICA'], ['Left MCA'],['Left VA'],['Right ICA'], ['Right MCA'],['Right VA'],['BA'], ['Diagonal 1'], ['Diagonal 2']]
+
+    list_Procedure: [['Pre-Stenting'], ['Post-Stenting'], ['Follow-Up']]
