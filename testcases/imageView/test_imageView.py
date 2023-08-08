@@ -16,9 +16,9 @@ from common import common_util
 @allure.feature('图像查看界面')
 class Test_ImageViewPage:
 
-    # def setup_class(self):
-    #     common_util.del_all_patients()
-    #     common_util.import_testdata()
+    def setup_class(self):
+        common_util.del_all_patients()
+        common_util.import_testdata()
 
     # @pytest.mark.test
     @allure.title('打印到U盘')
@@ -998,11 +998,11 @@ class Test_ImageViewPage:
 
     # @pytest.mark.test
     @allure.title('设置')
-    def test_systemSet(self):
+    def test_setting(self):
         allure.dynamic.description('设置：回撤类型，图像窗宽窗位风格，图像显示范围，')
         try:
             app = common_util.connect_application()
-            common_util.back_scanImagePage()
+            common_util.back_imageViewPage()
             with allure.step('回撤距离和速度'):
                 setting_btn = app['血管内断层成像系统'].child_window(auto_id="btnSetting", control_type="Button",found_index=0)
                 setting_btn.click_input()
@@ -1037,6 +1037,7 @@ class Test_ImageViewPage:
                     window_type.select(i)
                     time.sleep(1)
                 window_type.select(0)
+                time.sleep(1)
             with allure.step('显示范围'):
                 field_type = app['血管内断层成像系统'].child_window(auto_id="comField", control_type="ComboBox",
                                                                     found_index=0)
@@ -1059,6 +1060,7 @@ class Test_ImageViewPage:
             common_util.connect_application()
             common_util.add_text(str(e))
             assert False
+
     # @pytest.mark.test
     @allure.title('结束查看')
     def test_endView(self):

@@ -1,0 +1,2 @@
+INFO     test_shouye:test_shouye.py:98 导出USB:tiff
+INFO     test_shouye:test_shouye.py:162 导出USB:tiff完成！

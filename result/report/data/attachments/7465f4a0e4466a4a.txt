@@ -1,0 +1,2 @@
+INFO     test_shouye:test_shouye.py:982 关于软件使用协议
+INFO     test_shouye:test_shouye.py:1020 关于软件使用协议完成！

@@ -35,7 +35,7 @@ def connect_application():
             app = application.Application(backend='uia').connect(process=pid)
             time.sleep(2)
         else:
-            app = application.Application(backend='uia').start(r'D:\OCTViewer - 7.12\bin\OCTViewer.exe')
+            app = application.Application(backend='uia').start(r'D:\OCTViewer - 8.3\bin\OCTViewer.exe')
             # app['提示'].wait('exists', timeout=50)
             # ok_btn = app['提示'].child_window(title="确 定", auto_id="OkButton", control_type="Button")
             # if ok_btn.exists():
@@ -161,9 +161,23 @@ def import_testdata(index=0):
         rect = import_btn.rectangle().mid_point()
         mouse.click(coords=(rect.x, rect.y))
         time.sleep(1)
-        item = app['血管内断层成像系统'].child_window(auto_id="cmbFilePath", control_type="ComboBox").wait(wait_for='visible', timeout=50)
-        if index != 0:
-            item.select(1)
+        item = app['血管内断层成像系统'].child_window(auto_id="cmbFilePath", control_type="ComboBox").wait(
+            wait_for='visible', timeout=50)
+        content = item.texts()
+        deviceType = read_systemInfo()['deviceType']
+        if index == 0:
+            for i in range(len(content)):
+                if r'data\{}'.format(deviceType) in content[i]:
+                    item.select(i)
+                    time.sleep(1)
+                    break
+        elif index == 1:
+            for i in range(len(content)):
+                print(content[i])
+                if r'data\患者列表界面筛选' in content[i]:
+                    item.select(i)
+                    time.sleep(1)
+                    break
         time.sleep(2)
         import_btn2 = app['血管内断层成像系统'].child_window(title="导入", control_type="Button")
         import_btn2.click()
@@ -254,7 +268,7 @@ def back_patientListPage():
             select_btn = app['血管内断层成像系统'].child_window(title="选择患者", auto_id="btnSelExist",
                                                                 control_type="Button")
             select_btn.click()
-        time.sleep(2)
+        time.sleep(3)
     except:
         time.sleep(1)
         screen_shot('异常：back_patientListPage')
@@ -270,7 +284,7 @@ def back_patientImgPage():
             time.sleep(2)
             ok_btn = app['血管内断层成像系统'].child_window(title="确定", auto_id="btnOk", control_type="Button")
             ok_btn.click()
-            time.sleep(2)
+            time.sleep(3)
     except:
         time.sleep(1)
         screen_shot('异常：back_patientImgPage')
@@ -286,7 +300,7 @@ def back_imageViewPage():
             look_btn = app['血管内断层成像系统'].child_window(title="查看", control_type="Text", found_index=1)
             rect = look_btn.rectangle().mid_point()
             mouse.click(coords=(rect.x, rect.y))
-            time.sleep(2)
+            time.sleep(4)
     except:
         time.sleep(1)
         screen_shot('异常：back_imageViewPage')
@@ -300,7 +314,7 @@ def back_scanImagePage():
             back_patientImgPage()
             newOCT_btn = app['血管内断层成像系统'].child_window(auto_id="btnAddOCT", control_type="Button")
             newOCT_btn.click()
-            time.sleep(2)
+            time.sleep(3)
     except:
         time.sleep(1)
         screen_shot('异常：back_scanImagePage')

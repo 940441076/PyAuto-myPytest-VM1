@@ -9,7 +9,7 @@ import time
 from common import common_util
 import logging
 log = logging.getLogger(__name__)
-@pytest.mark.skip('忽略')
+# @pytest.mark.skip('忽略')
 @pytest.mark.run(order=5)
 @allure.feature('首页界面')
 class Test_ShowYePage:
@@ -778,10 +778,10 @@ class Test_ShowYePage:
             with allure.step('验证年龄不输入也可以注册成功'):
                 hospitalID__edit = app['血管内断层成像系统'].child_window(auto_id="txtPatientID",
                                                                           control_type="Edit")
-                hospitalID__edit.type_keys('testID')
+                hospitalID__edit.type_keys('testID-age')
                 time.sleep(1)
                 name_edit = app['血管内断层成像系统'].child_window(auto_id="txtName", control_type="Edit")
-                name_edit.type_keys('姓名')
+                name_edit.type_keys('姓名-age')
                 time.sleep(1)
                 common_util.screen_shot('不输入年龄')
                 newOCT_btn = app['血管内断层成像系统'].child_window(auto_id="btnAddOCT", control_type="Button")

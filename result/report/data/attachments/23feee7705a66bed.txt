@@ -1,0 +1,2 @@
+INFO     test_shouye:test_shouye.py:1034 首页关机：取消
+INFO     test_shouye:test_shouye.py:1047 首页关机：取消完成！

@@ -1,0 +1,2 @@
+INFO     test_shouye:test_shouye.py:856 注册患者，住院号已存在
+INFO     test_shouye:test_shouye.py:924 注册患者，住院号已存在完成！

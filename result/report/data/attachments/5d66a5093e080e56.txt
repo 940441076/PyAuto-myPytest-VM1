@@ -1,0 +1,1 @@
+INFO     test_shouye:test_shouye.py:809 注册患者：住院号不存在
